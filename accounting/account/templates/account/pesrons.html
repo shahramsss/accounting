@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">نام</th>
+            <th scope="col">موبایل</th>
+            <th scope="col">آدرس</th>
+            <th scope="col">ویرایش</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for person in persons %}
+      <tr>
+        <td>{{person.name}}</td>
+        <td>{{person.phone}}</td>
+        <td>{{person.address}}</td>
+        <td><a href="{% url 'account:person_update' person.id %}">ویرایش</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock content %}
+
+

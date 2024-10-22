@@ -21,6 +21,7 @@ app_name = 'account'
 urlpatterns = [
     path('login/',LoginView.as_view(), name='login' ),
     path('logout/',LogoutView.as_view(), name='logout'),
+    path('persons/',PersonListView.as_view(), name='persons'),
     path('personregister/',PersonRegisterView.as_view(), name='person_register'),
-    path('personupdate/<int:pk>/',PersonUpdateView.as_view(), name='person_Update'),
+    path('personupdate/<int:pk>/',PersonUpdateView.as_view(), name='person_update'),
 ]

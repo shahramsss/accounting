@@ -48,15 +48,37 @@ class PersonRegisterView(View):
         if form.is_valid():
             form.save()
             messages.success(request, "ثبت شخص با موفقت انجام شد.", "success")
-            return redirect("home:home")
+            return redirect("account:persons")
         else:
             messages.warning(request, "ثبت نام انجام نشد دوباره تلاش کنید!", "warning")
             return redirect("account:person_register")
 
 
+class PersonListView(View):
+    def get(self, request):
+        persons = Person.objects.all()
+        return render(
+            request,'account/pesrons.html' ,{'persons':persons}
+        )
+
+
 class PersonUpdateView(View):
-    from_class = PersonRegisterForm
+    form_class = PersonRegisterForm
 
     def get(self, request, pk):
         person = get_object_or_404(Person, pk=pk)
-        
+        form = self.form_class(instance=person)
+        return render(request, "account/pesron_update.html", {"form": form})
+
+    def post(self , request , pk):
+        person = get_object_or_404(Person, pk=pk)
+        form = self.form_class(request.POST , instance=person)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "ویرایش با موفقت انجام شد.", "success")
+            return redirect("account:persons")
+        else:
+            messages.warning(request, "ویرایش انجام نشد دوباره تلاش کنید!", "warning")
+            return redirect("account:person_update" ,pk = person.id)
+
+
