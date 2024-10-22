@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container w-25 " , align="right">
+    <h2>ثبت نام اشخاص</h2>
+    <form method="post" action="">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">ثبت</button>
+    </form>
+    </div>
+{% endblock content %}
+
+

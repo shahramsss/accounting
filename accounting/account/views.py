@@ -1,8 +1,10 @@
-from django.shortcuts import render , redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from .forms import UserLoginForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from .forms import PersonRegisterForm
+from .models import Person
 
 
 class LoginView(View):
@@ -16,7 +18,9 @@ class LoginView(View):
                 messages.success(request, "شما با موفقیت وارد شدید.", "success")
                 return redirect("home:home")
             else:
-                messages.warning(request, "نام کاربری یا رمز عبور نادرست است!", "warning")
+                messages.warning(
+                    request, "نام کاربری یا رمز عبور نادرست است!", "warning"
+                )
                 return redirect("account:login")
 
     def get(self, request):
@@ -25,10 +29,34 @@ class LoginView(View):
 
 
 class LogoutView(View):
-    def get(self , request):
+    def get(self, request):
         logout(request)
         messages.success(request, "شما خارج شدید.", "primary")
         return redirect("account:login")
-        
-        
+
+
+class PersonRegisterView(View):
+    form_class = PersonRegisterForm
+
+    def get(self, request):
+        return render(
+            request, "account/pesron_register.html", {"form": self.form_class}
+        )
+
+    def post(self, request):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "ثبت شخص با موفقت انجام شد.", "success")
+            return redirect("home:home")
+        else:
+            messages.warning(request, "ثبت نام انجام نشد دوباره تلاش کنید!", "warning")
+            return redirect("account:person_register")
+
+
+class PersonUpdateView(View):
+    from_class = PersonRegisterForm
+
+    def get(self, request, pk):
+        person = get_object_or_404(Person, pk=pk)
         
