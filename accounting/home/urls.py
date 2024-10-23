@@ -23,5 +23,6 @@ urlpatterns = [
     path("home/" , views.HomeView.as_view() , name='home'),
     path("products/" , views.ProductsView.as_view() , name='products'),
     path("productregister/" , views.ProductRegisterView.as_view() , name='product_register'),
+    path("productupdate/<int:pk>/" , views.ProductUpdateView.as_view() , name='product_update'),
   
 ]

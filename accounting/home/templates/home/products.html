@@ -10,6 +10,7 @@
           <th scope="col">نام</th>
           <th scope="col">قیمت</th>
           <th scope="col">قیمت خرید</th>
+          <th scope="col">ویرایش</th>
         </tr>
       </thead>
       <tbody>
@@ -19,9 +20,9 @@
             <td>{{ product.name }}</td>
             <td>{{ product.price }}</td>
             <td>{{ product.cost_price }}</td>
-            {% comment %} <td>
-              <a href="{% url 'home:person_update' person.id %}">ویرایش</a>
-            </td> {% endcomment %}
+             <td>
+              <a href="{% url 'home:product_update' product.id %}">ویرایش</a>
+            </td>
           </tr>
         {% endfor %}
       </tbody>

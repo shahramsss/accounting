@@ -29,7 +29,7 @@ class ProductRegisterView(View):
             messages.success(request, " محصول با موفقیت ثبت شد.", "success")
             return redirect("home:products")
         else:
-            messages.warning(request, " محصول با موفقیت ثبت شد.", "warning")
+            messages.warning(request, " محصول ثبت نشد دوباره تلاش کنید!", "warning")
             return redirect("home:product_register")
 
 
@@ -42,5 +42,17 @@ class ProductUpdateView(View):
 
     def get(self, request, pk):
         product = get_object_or_404(Product, pk=pk)
-        form = self.form_class(request.POST, instance=product)
-        return render(request , '' , {'form':form})
+        form = self.form_class(instance=product)
+        return render(request , 'home/product_update.html' , {'form':form})
+    
+    def post(self , request , pk):
+        product = get_object_or_404(Product, pk=pk)
+        form = self.form_class(request.POST , instance=product)
+        if form.is_valid():
+            form.save()
+            messages.success(request, " محصول با موفقیت ویرایش شد.", "success")
+            return redirect("home:products")
+        else:
+            messages.warning(request, " محصول ویرایش نشد دوباره تلاش کنید!", "warning")
+            return redirect("home:product_update" , pk = product.id)
+

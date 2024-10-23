@@ -39,8 +39,8 @@ from django.db import models
 # مدل محصول
 class Product(models.Model):
     name = models.CharField(max_length=200)  # نام محصول
-    price = models.DecimalField(max_digits=10, decimal_places=2)  # قیمت محصول (برای فروش)
-    cost_price = models.DecimalField(max_digits=10, decimal_places=2)  # قیمت خرید محصول
+    price = models.DecimalField(max_digits=10, decimal_places=0)  # قیمت محصول (برای فروش)
+    cost_price = models.DecimalField(max_digits=10, decimal_places=0)  # قیمت خرید محصول
 
     def __str__(self):
         return self.name
@@ -91,7 +91,7 @@ class InvoiceItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)  # ارتباط با محصول
     warehouse = models.ForeignKey(Warehouse, on_delete=models.DO_NOTHING)  # انبار مربوطه
     quantity = models.PositiveIntegerField()  # تعداد محصول
-    unit_price = models.DecimalField(max_digits=10, decimal_places=2)  # قیمت هر واحد (می‌تواند قیمت خرید یا قیمت فروش باشد)
+    unit_price = models.DecimalField(max_digits=10, decimal_places=0)  # قیمت هر واحد (می‌تواند قیمت خرید یا قیمت فروش باشد)
 
     # محاسبه قیمت کل برای هر آیتم در فاکتور
     @property
