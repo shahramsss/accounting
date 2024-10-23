@@ -20,6 +20,8 @@ from . import views
 
 app_name = 'home'
 urlpatterns = [
-    path("home/" , views.HomeView.as_view() , name='home')
+    path("home/" , views.HomeView.as_view() , name='home'),
+    path("products/" , views.ProductsView.as_view() , name='products'),
+    path("productregister/" , views.ProductRegisterView.as_view() , name='product_register'),
   
 ]
