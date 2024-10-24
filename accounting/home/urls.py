@@ -26,5 +26,10 @@ urlpatterns = [
     path("productupdate/<int:pk>/" , views.ProductUpdateView.as_view() , name='product_update'),
     path("productdelete/<int:pk>/" , views.ProductDeleteView.as_view() , name='product_delete'),
     path("productdeleteconfirm/<int:pk>/" , views.ProductDeleteView.as_view() , name='product_delete_confirm'),
-  
+    #  warehouses urls
+    path("warehouses/" , views.WarehousesView.as_view() , name='warehouses'),
+    path("warehouseregister/" , views.WarehouseRegisterView.as_view() , name='warehouse_register'),
+    path("warehouseupdate/<int:pk>/" , views.WarehouseUpdateView.as_view() , name='warehouse_update'),
+
+
 ]

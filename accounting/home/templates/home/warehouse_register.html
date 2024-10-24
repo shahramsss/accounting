@@ -3,15 +3,12 @@
 {% block content %}
 
 <div class="container w-25 " , align="right">
-    <h2>ویرایش اطاعات اشخاص</h2>
+    <h2>ثبت انبار </h2>
     <form method="post" action="">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">ویرایش</button>
-        <a href="{% url 'home:products' %}" class="btn btn-secondary">لغو</a>
-
+        <button type="submit" class="btn btn-primary">ثبت</button>
     </form>
     </div>
 {% endblock content %}
-
 
