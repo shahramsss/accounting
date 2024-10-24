@@ -210,12 +210,7 @@ class StocksDeleteView(View):
         if "stock_confirm_delete" in request.POST:
             stock.delete()
             messages.success(request, "انبار با موفقیت حذف شد.", "success")
-            return redirect("home:warehouses")
-            # در صورتی که کلیدهای خارجی محافظت‌شده وجود داشته باشد
-            messages.error(
-                request, "این انبار دارای محصول می باشد و قابل حذف نیست!", "warning"
-            )
-            return redirect("home:warehouses")
+            return redirect("home:stocks")
         else:
             messages.warning(request, "انبار حذف نشد!.", "warning")
-            return redirect("home:warehouses")
+            return redirect("home:stocks")
