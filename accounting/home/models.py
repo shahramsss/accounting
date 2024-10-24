@@ -55,8 +55,8 @@ class Warehouse(models.Model):
 
 # مدل موجودی (برای مدیریت موجودی هر محصول در هر انبار)
 class Stock(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)  # محصول مربوطه
-    warehouse = models.ForeignKey(Warehouse, on_delete=models.DO_NOTHING)  # انبار مربوطه
+    product = models.ForeignKey(Product, on_delete=models.PROTECT)  # محصول مربوطه
+    warehouse = models.ForeignKey(Warehouse, on_delete=models.PROTECT)  # انبار مربوطه
     quantity = models.PositiveIntegerField(default=0)  # مقدار موجودی
 
     class Meta:
@@ -75,7 +75,7 @@ class Invoice(models.Model):
 
     invoice_type = models.CharField(max_length=10, choices=INVOICE_TYPE_CHOICES)  # نوع فاکتور
     date = models.DateField(default=timezone.now)  # تاریخ فاکتور
-    person = models.ForeignKey(Person, on_delete=models.DO_NOTHING, related_name='invoices')  # شخص (فروشنده یا خریدار)
+    person = models.ForeignKey(Person, on_delete=models.PROTECT, related_name='invoices')  # شخص (فروشنده یا خریدار)
 
     def __str__(self):
         return f"Invoice #{self.id} - {self.person.name} - date:{self.date}"
@@ -87,9 +87,9 @@ class Invoice(models.Model):
 
 # مدل آیتم‌های فاکتور (برای خرید و فروش)
 class InvoiceItem(models.Model):
-    invoice = models.ForeignKey(Invoice, on_delete=models.DO_NOTHING, related_name='items')  # ارتباط با فاکتور
-    product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)  # ارتباط با محصول
-    warehouse = models.ForeignKey(Warehouse, on_delete=models.DO_NOTHING)  # انبار مربوطه
+    invoice = models.ForeignKey(Invoice, on_delete=models.PROTECT, related_name='items')  # ارتباط با فاکتور
+    product = models.ForeignKey(Product, on_delete=models.PROTECT)  # ارتباط با محصول
+    warehouse = models.ForeignKey(Warehouse, on_delete=models.PROTECT)  # انبار مربوطه
     quantity = models.PositiveIntegerField()  # تعداد محصول
     unit_price = models.DecimalField(max_digits=10, decimal_places=0)  # قیمت هر واحد (می‌تواند قیمت خرید یا قیمت فروش باشد)
 
