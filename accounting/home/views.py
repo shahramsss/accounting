@@ -33,26 +33,38 @@ class ProductRegisterView(View):
             return redirect("home:product_register")
 
 
-class ProductDeleteView(View):
-    pass
-
-
 class ProductUpdateView(View):
     form_class = ProductRegisterForm
 
     def get(self, request, pk):
         product = get_object_or_404(Product, pk=pk)
         form = self.form_class(instance=product)
-        return render(request , 'home/product_update.html' , {'form':form})
-    
-    def post(self , request , pk):
+        return render(request, "home/product_update.html", {"form": form})
+
+    def post(self, request, pk):
         product = get_object_or_404(Product, pk=pk)
-        form = self.form_class(request.POST , instance=product)
+        form = self.form_class(request.POST, instance=product)
         if form.is_valid():
             form.save()
             messages.success(request, " محصول با موفقیت ویرایش شد.", "success")
             return redirect("home:products")
         else:
             messages.warning(request, " محصول ویرایش نشد دوباره تلاش کنید!", "warning")
-            return redirect("home:product_update" , pk = product.id)
+            return redirect("home:product_update", pk=product.id)
+
+
+class ProductDeleteView(View):
+    def get(self, request, pk):
+        product = get_object_or_404(Product, pk=pk)
+        return render(request, "home/product_delete.html", {"product": product})
+
+    def post(self , request , pk):
+        product = get_object_or_404(Product, pk=pk)
+        if 'confirm_delete'  in request.POST:
+            product.delete()
+            messages.success(request , 'محصول با موفقیت حذف شد.','success')
+            return redirect("home:products")
+        else:
+            messages.warning(request , 'محصول  حذف نشد!.','warning')
+            return redirect("home:products")
 

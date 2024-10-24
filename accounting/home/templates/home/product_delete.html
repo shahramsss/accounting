@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container  " , align="right">
+    <h2>حذف محصول</h2>
+    <h2>آیا می خواهید محصول <span class="text-primary">{{product.name}}</span> را حذف کنید؟</h2>
+    <form method="post" action="{% url 'home:product_delete_confirm' product.id %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" name="confirm_delete" class="btn btn-danger">حذف</button>
+        <a href="{% url 'home:products' %}" class="btn btn-secondary">لغو</a>
+
+    </form>
+    </div>
+{% endblock content %}
+
