@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block content %}
+  <h3 class="my-1">موجودی</h3>
+
+  <a class="btn btn-primary my-2" href="{% url 'home:stock_register' %}">ثبت موجودی</a>
+  {% if stocks %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="row">#</th>
+          <th scope="col">نام محصول</th>
+          <th scope="col">قیمت</th>
+          <th scope="col">تعداد</th>
+          <th scope="col">انبار</th>
+          <th scope="col">ویرایش</th>
+          <th scope="col">حذف</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for stock in stocks %}
+          <tr>
+            <td>{{ stock.id }}</td>
+            <td>{{ stock.product.name }}</td>
+            <td>{{ stock.product.price|intcomma }}</td>
+            <td>{{ stock.quantity }}</td>
+            <td>{{ stock.warehouse.name }}</td>
+            <td>
+              <a href="{% url 'home:stock_update' stock.id %}">ویرایش</a>
+            </td>
+            <td>
+              {% comment %} <a class="text-danger" href="{% url 'home:product_delete' product.id %}">حذف</a> {% endcomment %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+{% endblock %}

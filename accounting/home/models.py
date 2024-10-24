@@ -63,7 +63,7 @@ class Stock(models.Model):
         unique_together = ('product', 'warehouse')  # هر محصول در هر انبار تنها یک بار ظاهر می‌شود
 
     def __str__(self):
-        return f"{self.product.name} - {self.warehouse.name}: {self.quantity} units"
+        return f"{self.product.name} - {self.warehouse.name}: {self.quantity}"
 
 
 # مدل فاکتور (هم خرید و هم فروش)

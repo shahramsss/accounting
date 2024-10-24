@@ -32,5 +32,9 @@ urlpatterns = [
     path("warehouseupdate/<int:pk>/" , views.WarehouseUpdateView.as_view() , name='warehouse_update'),
     path("warehousedelete/<int:pk>/" , views.WarehouseDeleteView.as_view() , name='warehouse_delete'),
     path("warehousedeleteconfirm/<int:pk>/" , views.WarehouseDeleteView.as_view() , name='warehouse_delete_confirm'),
+    # stocks urls
+    path("stocks/" , views.StoksView.as_view() , name='stocks'),
+    path("stockregister/" , views.StockRegisterView.as_view() , name='stock_register'),
+    path("stockupdate/<int:pk>/" , views.StockUpdateView.as_view() , name='stock_update'),
 
 ]

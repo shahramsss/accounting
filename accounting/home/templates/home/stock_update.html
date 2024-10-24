@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container w-25 " , align="right">
+    <h2>ویرایش موجودی</h2>
+    <form method="post" action="">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">ویرایش</button>
+        <a href="{% url 'home:products' %}" class="btn btn-secondary">لغو</a>
+
+    </form>
+    </div>
+{% endblock content %}
+
+

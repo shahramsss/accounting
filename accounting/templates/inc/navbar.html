@@ -1,27 +1,32 @@
-<nav class="navbar navbar-expand-lg" style="background-color: #BDBDBD;">
+<nav class="navbar navbar-expand-lg" style="background-color: #343a40;">
   <div class="container-fluid">
-    <a class="navbar-brand btn btn-light" href="#">صفحه اصلی</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+    <a class="navbar-brand btn btn-warning" href="{% url 'home:home' %}">صفحه اصلی</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="{% url 'home:home' %}">خانه</a>
+          <a class="nav-link text-white" aria-current="page" href="{% url 'home:home' %}">خانه</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="{% url 'account:persons' %}">اشخاص</a>
+          <a class="nav-link text-white" aria-current="page" href="{% url 'account:persons' %}">اشخاص</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="{% url 'home:products' %}">محصولات</a>
+          <a class="nav-link text-white" aria-current="page" href="{% url 'home:products' %}">محصولات</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="{% url 'home:warehouses' %}">انبارها</a>
+          <a class="nav-link text-white" aria-current="page" href="{% url 'home:warehouses' %}">انبارها</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" aria-current="page" href="{% url 'home:stocks' %}">موجودی</a>
         </li>
       </ul>
       <div class="d-flex">
         {% if request.user.is_authenticated %}
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ request.user.username }}</a>
+              <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ request.user.username }}</a>
               <ul class="dropdown-menu dropdown-menu-end">
                 <li>
                   <a class="dropdown-item" href="#">اطلاعات کاربر</a>
@@ -38,10 +43,10 @@
         {% else %}
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">ورود</a>
+              <a class="nav-link text-white" aria-current="page" href="#">ورود</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">ثبت نام</a>
+              <a class="nav-link text-white" aria-current="page" href="#">ثبت نام</a>
             </li>
           </ul>
         {% endif %}
