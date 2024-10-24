@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block content %}
+
+<div class="container my-2">
+    <H3>حذف موجودی</H3>
+    <br>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">نام محصول</th>
+            <th scope="col">قیمت</th>
+            <th scope="col">تعداد</th>
+            <th scope="col">انبار</th>
+            
+          </tr>
+        </thead>
+        <tbody>
+            <tr>
+              <td>{{ stock.product.name }}</td>
+              <td>{{ stock.product.price|intcomma }}</td>
+              <td>{{ stock.quantity }}</td>
+              <td>{{ stock.warehouse.name }}</td>
+              
+            </tr>
+        </tbody>
+      </table>
+    <P>آیا می خواهید این موجودی را حذف کنید؟</P>
+    <form method="post" action="{% url 'home:stock_delete_confirm' stock.id %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" name="stock_confirm_delete" class="btn btn-danger">حذف</button>
+        <a href="{% url 'home:stocks' %}" class="btn btn-secondary">لغو</a>
+
+    </form>
+</div>
+{% endblock content %}

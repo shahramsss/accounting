@@ -64,9 +64,15 @@ class ProductDeleteView(View):
     def post(self, request, pk):
         product = get_object_or_404(Product, pk=pk)
         if "confirm_delete" in request.POST:
-            product.delete()
-            messages.success(request, "محصول با موفقیت حذف شد.", "success")
-            return redirect("home:products")
+            try:
+                product.delete()
+                messages.success(request, "محصول با موفقیت حذف شد.", "success")
+                return redirect("home:products")
+            except ProtectedError as e:
+                messages.error(
+                    request, "این محصول دارای موجودی می باشد و قابل حذف نیست!", "warning"
+                )
+                return redirect("home:products")
         else:
             messages.warning(request, "محصول حذف نشد!.", "warning")
             return redirect("home:products")
@@ -191,3 +197,25 @@ class StockUpdateView(View):
                 "warning",
             )
             return redirect("home:stock_update")
+
+
+
+class StocksDeleteView(View):
+    def get(self , request , pk):
+        stock = get_object_or_404(Stock , pk = pk )
+        return render(request , 'home/stock_delete.html',{'stock':stock})
+    
+    def post(self, request, pk):
+        stock = get_object_or_404(Stock, pk=pk)
+        if "stock_confirm_delete" in request.POST:
+            stock.delete()
+            messages.success(request, "انبار با موفقیت حذف شد.", "success")
+            return redirect("home:warehouses")
+            # در صورتی که کلیدهای خارجی محافظت‌شده وجود داشته باشد
+            messages.error(
+                request, "این انبار دارای محصول می باشد و قابل حذف نیست!", "warning"
+            )
+            return redirect("home:warehouses")
+        else:
+            messages.warning(request, "انبار حذف نشد!.", "warning")
+            return redirect("home:warehouses")

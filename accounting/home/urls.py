@@ -36,5 +36,8 @@ urlpatterns = [
     path("stocks/" , views.StoksView.as_view() , name='stocks'),
     path("stockregister/" , views.StockRegisterView.as_view() , name='stock_register'),
     path("stockupdate/<int:pk>/" , views.StockUpdateView.as_view() , name='stock_update'),
+    path("stockdelete/<int:pk>/" , views.StocksDeleteView.as_view() , name='stock_delete'),
+    path("stockdeleteconfirm/<int:pk>/" , views.StocksDeleteView.as_view() , name='stock_delete_confirm'),
+
 
 ]

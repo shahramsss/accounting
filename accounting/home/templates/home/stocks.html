@@ -30,7 +30,7 @@
               <a href="{% url 'home:stock_update' stock.id %}">ویرایش</a>
             </td>
             <td>
-              {% comment %} <a class="text-danger" href="{% url 'home:product_delete' product.id %}">حذف</a> {% endcomment %}
+              <a class="text-danger" href="{% url 'home:stock_delete' stock.id %}">حذف</a>
             </td>
           </tr>
         {% endfor %}
