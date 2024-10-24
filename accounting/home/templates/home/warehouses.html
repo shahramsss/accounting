@@ -2,6 +2,7 @@
 {% load humanize %}
 
 {% block content %}
+  <h3 class="my-1">انبارها</h3>
   <a class="btn btn-primary my-2" href="{% url 'home:warehouse_register' %}">ثبت انبار</a>
   {% if warehouses %}
     <table class="table">
@@ -10,8 +11,9 @@
           <th scope="row">#</th>
           <th scope="col">نام</th>
           <th scope="col">آدرس</th>
+          <th scope="col">محصولات</th>
           <th scope="col">ویرایش</th>
-         
+          <th scope="col">حذف</th>
         </tr>
       </thead>
       <tbody>
@@ -20,15 +22,14 @@
             <td>{{ warehouse.id }}</td>
             <td>{{ warehouse.name }}</td>
             <td>{{ warehouse.location }}</td>
-            
-             <td>
+            <td>محصولات</td>
+
+            <td>
               <a href="{% url 'home:warehouse_update' warehouse.id %}">ویرایش</a>
             </td>
-            {% comment %}
             <td>
-              <a class="text-danger" href="{% url 'home:product_delete' product.id %}">حذف</a>
-            </td> 
-            {% endcomment %}
+              <a class="text-danger" href="{% url 'home:warehouse_delete' warehouse.id %}">حذف</a>
+            </td>
           </tr>
         {% endfor %}
       </tbody>

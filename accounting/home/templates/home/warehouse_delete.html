@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container my-2">
+    <H3>حذف انبار</H3>
+    <br>
+    <P>آیا می خواهید انبار <span class="text-primary">{{warehouse.name}}</span> را حذف کنید؟</P>
+    <form method="post" action="{% url 'home:warehouse_delete_confirm' warehouse.id %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" name="warehouse_confirm_delete" class="btn btn-danger">حذف</button>
+        <a href="{% url 'home:warehouses' %}" class="btn btn-secondary">لغو</a>
+
+    </form>
+</div>
+{% endblock content %}

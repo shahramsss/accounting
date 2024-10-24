@@ -2,6 +2,8 @@
 {% load humanize %}
 
 {% block content %}
+  <h3 class="my-1">محصولات</h3>
+
   <a class="btn btn-primary my-2" href="{% url 'home:product_register' %}">ثبت محصول</a>
   {% if products %}
     <table class="table">

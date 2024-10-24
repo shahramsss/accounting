@@ -89,7 +89,7 @@ class Invoice(models.Model):
 class InvoiceItem(models.Model):
     invoice = models.ForeignKey(Invoice, on_delete=models.PROTECT, related_name='items')  # ارتباط با فاکتور
     product = models.ForeignKey(Product, on_delete=models.PROTECT)  # ارتباط با محصول
-    warehouse = models.ForeignKey(Warehouse, on_delete=models.PROTECT)  # انبار مربوطه
+    warehouse = models.ForeignKey(Warehouse, on_delete=models.PROTECT   )  # انبار مربوطه
     quantity = models.PositiveIntegerField()  # تعداد محصول
     unit_price = models.DecimalField(max_digits=10, decimal_places=0)  # قیمت هر واحد (می‌تواند قیمت خرید یا قیمت فروش باشد)
 
