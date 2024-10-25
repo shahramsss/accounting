@@ -44,6 +44,8 @@ INSTALLED_APPS = [
 
     # third apps
     'django.contrib.humanize',
+    'django_jalali',
+
     
 
 

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
-from .models import Product, Warehouse, Stock , Invoice
+from .models import Product, Warehouse, Stock, Invoice
 from .forms import *
 from django.contrib import messages
 from django.db.models import ProtectedError
@@ -169,7 +169,7 @@ class StockRegisterView(View):
             messages.success(request, "موجودی با موفقیت ثبت شد.", "success")
             return redirect("home:stocks")
         else:
-            messages.success(
+            messages.warning(
                 request,
                 "موجودی ثبت نشد! این محصول در این انبار قبلا ثبت شده است!",
                 "warning",
@@ -222,3 +222,24 @@ class InvoicesView(View):
     def get(self, request):
         invoices = Invoice.objects.all()
         return render(request, "home/invoices.html", {"invoices": invoices})
+
+
+class InvoiceRegisterView(View):
+    form_class = InvoiceRegisterForm
+
+    def get(self, request):
+        return render(request, "home/invoice_register.html", {"form": self.form_class})
+
+    def post(self, request):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "فاکتور با موفقیت ثبت شد.", "success")
+            return redirect("home:invoices")
+        else:
+            messages.warning(
+                request,
+                "فاکتور ثبت نشد!",
+                "warning",
+            )
+            return redirect("home:invoice_register")

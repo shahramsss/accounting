@@ -40,5 +40,6 @@ urlpatterns = [
     path("stockdeleteconfirm/<int:pk>/" , views.StocksDeleteView.as_view() , name='stock_delete_confirm'),
     # Invoice urls
     path("invoices/" , views.InvoicesView.as_view() , name='invoices'),
+    path("invoiceregister/" , views.InvoiceRegisterView.as_view() , name='invoice_register'),
 
 ]
