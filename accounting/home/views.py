@@ -178,7 +178,7 @@ class StockRegisterView(View):
 
 
 class StockUpdateView(View):
-    form_class = StockeRegisterForm
+    form_class = StockeUpdateForm
 
     def get(self, request, pk):
         stock = get_object_or_404(Stock, pk=pk)

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Product, Warehouse , Stock
+from .models import Product, Warehouse , Stock , Invoice
 
 
 class ProductRegisterForm(forms.ModelForm):
@@ -61,9 +61,31 @@ class StockeRegisterForm(forms.ModelForm):
                     "warehouse": "نام انبار",
                     "quantity": "تعداد",
                 }
+
+
+
+class StockeUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Stock
+        fields = "__all__"
+
+        widgets = {
+            'product': forms.Select(attrs={'class': 'form-control'}),  # ویجت انتخاب برای محصول
+            'warehouse': forms.Select(attrs={'class': 'form-control'}),  # ویجت انتخاب برای انبار
+            'quantity': forms.NumberInput(attrs={'class': 'form-control', 'min': 0}),  # ورودی عددی برای مقدار موجودی
+        }
+        labels = {  # برچسب‌های سفارشی برای فیلدهای موجود در مدل
+                    "product": "نام محصول",
+                    "warehouse": "نام انبار",
+                    "quantity": "تعداد",
+                }
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # غیر قابل تغییر کردن فیلدها
         self.fields['product'].disabled = True
         self.fields['warehouse'].disabled = True
         
+class InvoiceRegisterForm(forms.ModelForm):
+    class Meta:
+        model = Invoice
+        fields = "__all__"
