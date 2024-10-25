@@ -294,7 +294,9 @@ class InvoiceItemRegisterView(View):
     form_class = InvoiceItemRegisterForm
 
     def get(self, request):
-        return render(request, "home/invoice_item_register.html", {"form": self.form_class})
+        return render(
+            request, "home/invoice_item_register.html", {"form": self.form_class}
+        )
 
     def post(self, request):
         form = self.form_class(request.POST)
@@ -308,4 +310,30 @@ class InvoiceItemRegisterView(View):
                 "موردی ثبت نشد!",
                 "warning",
             )
+            return redirect("home:invoice_item_register")
+
+
+class InvoicItemeUpdateView(View):
+    form_class = InvoiceItemRegisterForm
+
+    def get(self, request, pk):
+        invoice_item = get_object_or_404(InvoiceItem, pk=pk)
+        form = self.form_class(instance=invoice_item)
+        return render(request, "home/invoice_item_update.html", {"form": form})
+
+    def post(self, request, pk):
+        invoice_item = get_object_or_404(InvoiceItem, pk=pk)
+        Stock.objects.get(Product)
+        form = self.form_class(request.POST, instance=invoice_item)
+        print("*"*90)
+        print(invoice_item.quantity)
+        invoice_item_quntity = invoice_item.quantity
+        if form.is_valid():
+            # form.save()
+            print(form.cleaned_data["quantity"])
+            print(invoice_item_quntity- form.cleaned_data["quantity"])
+            messages.success(request, "مورد فاکتور با موفقیت ویرایش شد.", "success")
+            return redirect("home:invoice_items")
+        else:
+            messages.success(request, "مورد فاکتور ویرایش نشد!.", "warning")
             return redirect("home:invoice_item_register")

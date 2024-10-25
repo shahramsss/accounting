@@ -47,5 +47,6 @@ urlpatterns = [
     # invoice_item urls
     path("invoiceitems/" , views.InvoiceItemsView.as_view() , name='invoice_items'),
     path("invoicitemeregister/" , views.InvoiceItemRegisterView.as_view() , name='invoice_item_register'),
+    path("invoiceitemupdate/<int:pk>/" , views.InvoicItemeUpdateView.as_view() , name='invoice_item_update'),
 
 ]

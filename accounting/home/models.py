@@ -1,6 +1,7 @@
 from django.db import models
 from account.models import Person
 from django.utils import timezone
+from khayyam import JalaliDate
 
 
 # class Product(models.Model):
@@ -78,7 +79,7 @@ class Invoice(models.Model):
     person = models.ForeignKey(Person, on_delete=models.PROTECT, related_name='invoices')  # شخص (فروشنده یا خریدار)
 
     def __str__(self):
-        return f"Invoice #{self.id} - {self.person.name} - date:{self.date}"
+        return f"#{self.id} - {self.person.name} -{self.invoice_type} - ({JalaliDate(self.date).strftime("%D %B %Y")}) "
     # محاسبه کل مبلغ فاکتور
     @property
     def total_amount(self):

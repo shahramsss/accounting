@@ -1,5 +1,5 @@
 from django import forms
-from .models import Product, Warehouse, Stock, Invoice , InvoiceItem
+from .models import Product, Warehouse, Stock, Invoice, InvoiceItem
 
 
 class ProductRegisterForm(forms.ModelForm):
@@ -104,15 +104,9 @@ class InvoiceRegisterForm(forms.ModelForm):
         fields = "__all__"
 
         widgets = {
-            "invoice_type": forms.Select(
-                attrs={"class": "form-control"}
-            ),  # ویجت انتخاب برای محصول
-            "date": forms.DateInput(
-                attrs={"class": "form-control", "type": "date"}
-            ),  # ویجت انتخاب برای انبار
-            "person": forms.Select(
-                attrs={"class": "form-control", "min": 0}
-            ),  # ورودی عددی برای مقدار موجودی
+            "invoice_type": forms.Select(attrs={"class": "form-control"}),
+            "date": forms.DateInput(attrs={"class": "form-control", "type": "date"}),
+            "person": forms.Select(attrs={"class": "form-control", "min": 0}),
         }
         labels = {  # برچسب‌های سفارشی برای فیلدهای موجود در مدل
             "invoice_type": "نوع فاکتور",
@@ -126,19 +120,20 @@ class InvoiceItemRegisterForm(forms.ModelForm):
         model = InvoiceItem
         fields = "__all__"
 
-        # widgets = {
-        #     "invoice_type": forms.Select(
-        #         attrs={"class": "form-control"}
-        #     ),  # ویجت انتخاب برای محصول
-        #     "date": forms.DateInput(
-        #         attrs={"class": "form-control", "type": "date"}
-        #     ),  # ویجت انتخاب برای انبار
-        #     "person": forms.Select(
-        #         attrs={"class": "form-control", "min": 0}
-        #     ),  # ورودی عددی برای مقدار موجودی
-        # }
-        # labels = {  # برچسب‌های سفارشی برای فیلدهای موجود در مدل
-        #     "invoice_type": "نوع فاکتور",
-        #     "date": "تاریخ",
-        #     "person": "شخص",
-        # }
+        widgets = {
+            "invoice": forms.Select(attrs={"class": "form-control"}),
+            "product": forms.Select(attrs={"class": "form-control"}),
+            "warehouse": forms.Select(attrs={"class": "form-control"}),
+            "quantity": forms.NumberInput(attrs={"class": "form-control","placeholder": "تعداد"}),
+            "unit_price": forms.NumberInput(
+                attrs={"class": "form-control", "placeholder": "قیمت واحد"}
+            ),  
+        }
+
+        labels = {  # برچسب‌های سفارشی برای فیلدهای موجود در مدل
+            "invoice": "فاکتور",
+            "product": "محصول",
+            "warehouse": "انبار",
+            "quantity": "تعداد",
+            "unit_price": "قیمت واحد",
+        }

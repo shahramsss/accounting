@@ -7,5 +7,5 @@ register = template.Library()
 @register.filter
 def to_jalali(date):
     if date:
-        return JalaliDate(date).strftime("%D %B %Y ")
+        return JalaliDate(date).strftime("%D %B %Y")
     return ''

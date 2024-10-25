@@ -28,22 +28,23 @@
           <tr>
             <td>{{ invoice_item.id }}</td>
 
-            {% if invoice_item.invoice.invoice_type  == 'purchase' %}
+            {% if invoice_item.invoice.invoice_type == 'purchase' %}
               <td>خرید</td>
             {% else %}
               <td>فروش</td>
             {% endif %}
 
-            <td>{{ invoice_item.invoice.date |to_jalali }}</td>
+            <td>{{ invoice_item.invoice.date|to_jalali }}</td>
             <td>{{ invoice_item.warehouse.name }}</td>
             <td>{{ invoice_item.invoice.person.name }}</td>
             <td>{{ invoice_item.product.name }}</td>
             <td>{{ invoice_item.quantity }}</td>
             <td>{{ invoice_item.unit_price|intcomma }}</td>
-            <td>{{ invoice_item.total_price |intcomma }}</td>
-            {% comment %} <td>
-              <a href="{% url 'home:stock_update' stock.id %}">ویرایش</a>
+            <td>{{ invoice_item.total_price|intcomma }}</td>
+            <td>
+              <a href="{% url 'home:invoice_item_update' invoice_item.id %}">ویرایش</a>
             </td>
+            {% comment %}
             <td>
               <a class="text-danger" href="{% url 'home:stock_delete' stock.id %}">حذف</a>
             </td> {% endcomment %}
