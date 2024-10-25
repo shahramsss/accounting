@@ -30,13 +30,12 @@
             
             <td>{{ invoice.person.name }}</td>
             <td>{{ invoice.date|to_jalali }}</td>
-            {% comment %} <td>{{ invoice.date|jformat:"%Y/%m/%d"}}</td> {% endcomment %}
-            {% comment %} <td>
-              <a href="{% url 'home:stock_update' stock.id %}">ویرایش</a>
+            <td>
+              <a href="{% url 'home:invoice_update' invoice.id %}">ویرایش</a>
             </td>
             <td>
-              <a class="text-danger" href="{% url 'home:stock_delete' stock.id %}">حذف</a>
-            </td> {% endcomment %}
+              <a class="text-danger" href="{% url 'home:invoice_delete' invoice.id %}">حذف</a>
+            </td> 
           </tr>
         {% endfor %}
       </tbody>

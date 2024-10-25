@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+
+{% block content %}
+  <div class="container my-2">
+    <H3>حذف فاکتور</H3>
+    <br />
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">نوع فاکتور</th>
+          <th scope="col">شخص</th>
+          <th scope="col">تاریخ</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ invoice.id }}</td>
+          {% if invoice.invoice_type == 'purchase' %}
+            <td>خرید</td>
+          {% else %}
+            <td>فروش</td>
+          {% endif %}
+          <td>{{ invoice.person.name }}</td>
+          <td>{{ invoice.date|to_jalali }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <P>آیا می خواهید این فاکتور را حذف کنید؟</P>
+    <form method="post" action="{% url 'home:invoice_delete_confirm' invoice.id %}">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" ii="salam" name="invoice_confirm_delete" class="btn btn-danger">حذف</button>
+      <a href="{% url 'home:invoices' %}" class="btn btn-secondary">لغو</a>
+    </form>
+  </div>
+{% endblock %}

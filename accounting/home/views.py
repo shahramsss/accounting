@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
-from .models import Product, Warehouse, Stock, Invoice
+from .models import Product, Warehouse, Stock, Invoice, InvoiceItem
 from .forms import *
 from django.contrib import messages
 from django.db.models import ProtectedError
@@ -243,3 +243,69 @@ class InvoiceRegisterView(View):
                 "warning",
             )
             return redirect("home:invoice_register")
+
+
+class InvoiceUpdateView(View):
+    form_class = InvoiceRegisterForm
+
+    def get(self, request, pk):
+        invoice = get_object_or_404(Invoice, pk=pk)
+        form = self.form_class(instance=invoice)
+        return render(request, "home/invoice_update.html", {"form": form})
+
+    def post(self, request, pk):
+        invoice = get_object_or_404(Invoice, pk=pk)
+        form = self.form_class(request.POST, instance=invoice)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "فاکتور با موفقیت ویرایش شد.", "success")
+            return redirect("home:invoices")
+        else:
+            messages.success(request, "فاکتور ویرایش نشد!.", "warning")
+            return redirect("home:invoice_register")
+
+
+class InvoiceDeleteView(View):
+    def get(self, request, pk):
+        invoice = get_object_or_404(Invoice, pk=pk)
+        return render(request, "home/invoice_delete.html", {"invoice": invoice})
+
+    def post(self, request, pk):
+        invoice = get_object_or_404(Invoice, pk=pk)
+        if "invoice_confirm_delete" in request.POST:
+            invoice.delete()
+            messages.success(request, "فاکتور با موفقیت حذف شد.", "success")
+            return redirect("home:invoices")
+        else:
+            messages.warning(request, "افاکتور حذف نشد!.", "warning")
+            return redirect("home:invoices")
+
+
+# InvoiceItem View
+class InvoiceItemsView(View):
+    def get(self, request):
+        invoice_items = InvoiceItem.objects.all()
+        return render(
+            request, "home/invoice_items.html", {"invoice_items": invoice_items}
+        )
+
+
+class InvoiceItemRegisterView(View):
+    form_class = InvoiceItemRegisterForm
+
+    def get(self, request):
+        return render(request, "home/invoice_item_register.html", {"form": self.form_class})
+
+    def post(self, request):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "مورد با موفقیت ثبت شد.", "success")
+            return redirect("home:invoice_items")
+        else:
+            messages.warning(
+                request,
+                "موردی ثبت نشد!",
+                "warning",
+            )
+            return redirect("home:invoice_item_register")
