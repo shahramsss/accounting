@@ -89,3 +89,14 @@ class InvoiceRegisterForm(forms.ModelForm):
     class Meta:
         model = Invoice
         fields = "__all__"
+        
+        widgets = {
+            'invoice_type': forms.Select(attrs={'class': 'form-control'}),  # ویجت انتخاب برای محصول
+            'date': forms.DateInput(attrs={'class': 'form-control' , 'type': 'date'}),  # ویجت انتخاب برای انبار
+            'person': forms.Select(attrs={'class': 'form-control', 'min': 0}),  # ورودی عددی برای مقدار موجودی
+        }
+        labels = {  # برچسب‌های سفارشی برای فیلدهای موجود در مدل
+                    "product": "نام محصول",
+                    "warehouse": "نام انبار",
+                    "quantity": "تعداد",
+                }
