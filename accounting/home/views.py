@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
-from .models import Product, Warehouse, Stock
+from .models import Product, Warehouse, Stock , Invoice
 from .forms import *
 from django.contrib import messages
 from django.db.models import ProtectedError
@@ -70,7 +70,9 @@ class ProductDeleteView(View):
                 return redirect("home:products")
             except ProtectedError as e:
                 messages.error(
-                    request, "این محصول دارای موجودی می باشد و قابل حذف نیست!", "warning"
+                    request,
+                    "این محصول دارای موجودی می باشد و قابل حذف نیست!",
+                    "warning",
                 )
                 return redirect("home:products")
         else:
@@ -199,12 +201,11 @@ class StockUpdateView(View):
             return redirect("home:stock_update")
 
 
-
 class StocksDeleteView(View):
-    def get(self , request , pk):
-        stock = get_object_or_404(Stock , pk = pk )
-        return render(request , 'home/stock_delete.html',{'stock':stock})
-    
+    def get(self, request, pk):
+        stock = get_object_or_404(Stock, pk=pk)
+        return render(request, "home/stock_delete.html", {"stock": stock})
+
     def post(self, request, pk):
         stock = get_object_or_404(Stock, pk=pk)
         if "stock_confirm_delete" in request.POST:
@@ -214,3 +215,10 @@ class StocksDeleteView(View):
         else:
             messages.warning(request, "انبار حذف نشد!.", "warning")
             return redirect("home:stocks")
+
+
+# Invoice View
+class InvoicesView(View):
+    def get(self, request):
+        invoices = Invoice.objects.all()
+        return render(request, "home/invoices.html", {"invoices": invoices})
