@@ -44,10 +44,10 @@
             <td>
               <a href="{% url 'home:invoice_item_update' invoice_item.id %}">ویرایش</a>
             </td>
-            {% comment %}
+            
             <td>
-              <a class="text-danger" href="{% url 'home:stock_delete' stock.id %}">حذف</a>
-            </td> {% endcomment %}
+              <a class="text-danger" href="{% url 'home:invoice_item_delete' invoice_item.id %}">حذف</a>
+            </td>
           </tr>
         {% endfor %}
       </tbody>

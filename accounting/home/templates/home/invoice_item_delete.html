@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load custom_filters %}
+{% block content %}
+  <div class="container my-2">
+    <H3>حذف موجودی</H3>
+    <br />
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="row">#</th>
+          <th scope="col">نوع فاکتور</th>
+          <th scope="col">تاریخ فاکتور</th>
+          <th scope="col">نام انبار</th>
+          <th scope="col">شخص</th>
+          <th scope="col">نام محصول</th>
+          <th scope="col">تعداد</th>
+          <th scope="col">قیمت واحد</th>
+          <th scope="col">قیمت کل</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ invoice_item.id }}</td>
+
+          {% if invoice_item.invoice.invoice_type == 'purchase' %}
+            <td>خرید</td>
+          {% else %}
+            <td>فروش</td>
+          {% endif %}
+
+          <td>{{ invoice_item.invoice.date|to_jalali }}</td>
+          <td>{{ invoice_item.warehouse.name }}</td>
+          <td>{{ invoice_item.invoice.person.name }}</td>
+          <td>{{ invoice_item.product.name }}</td>
+          <td>{{ invoice_item.quantity }}</td>
+          <td>{{ invoice_item.unit_price|intcomma }}</td>
+          <td>{{ invoice_item.total_price|intcomma }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <P>آیا می خواهید این موجودی را حذف کنید؟</P>
+    <form method="post" action="{% url 'home:invoice_item_delete' invoice_item.id %}">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" name="invoice_item_confirm_delete" class="btn btn-danger">حذف</button>
+      <a href="{% url 'home:invoice_items' %}" class="btn btn-secondary">لغو</a>
+    </form>
+  </div>
+{% endblock %}

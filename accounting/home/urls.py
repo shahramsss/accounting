@@ -43,10 +43,11 @@ urlpatterns = [
     path("invoiceregister/" , views.InvoiceRegisterView.as_view() , name='invoice_register'),
     path("invoiceupdate/<int:pk>/" , views.InvoiceUpdateView.as_view() , name='invoice_update'),
     path("invoicedelete/<int:pk>/" , views.InvoiceDeleteView.as_view() , name='invoice_delete'),
-    path("invoicedeleteconfirm/<int:pk>/" , views.InvoiceDeleteView.as_view() , name='invoice_delete_confirm'),
     # invoice_item urls
     path("invoiceitems/" , views.InvoiceItemsView.as_view() , name='invoice_items'),
     path("invoicitemeregister/" , views.InvoiceItemRegisterView.as_view() , name='invoice_item_register'),
     path("invoiceitemupdate/<int:pk>/" , views.InvoicItemeUpdateView.as_view() , name='invoice_item_update'),
+    path("invoiceitemdelete/<int:pk>/" , views.InvoiceItemDeleteView.as_view() , name='invoice_item_delete'),
+    path("invoiceitemdeleteconfirm/<int:pk>/" , views.InvoiceItemDeleteView.as_view() , name='invoice_item_delete_confirm'),
 
 ]
