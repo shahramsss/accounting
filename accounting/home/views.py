@@ -323,15 +323,18 @@ class InvoicItemeUpdateView(View):
 
     def post(self, request, pk):
         invoice_item = get_object_or_404(InvoiceItem, pk=pk)
-        Stock.objects.get(Product)
+        stock = Stock.objects.get(
+            product=invoice_item.product, warehouse=invoice_item.warehouse
+        )
         form = self.form_class(request.POST, instance=invoice_item)
-        print("*"*90)
-        print(invoice_item.quantity)
-        invoice_item_quntity = invoice_item.quantity
+        invoice_item_quantity = invoice_item.quantity
         if form.is_valid():
-            # form.save()
-            print(form.cleaned_data["quantity"])
-            print(invoice_item_quntity- form.cleaned_data["quantity"])
+            if invoice_item.invoice.invoice_type == 'purchase':
+                stock.quantity -= invoice_item_quantity  # موجودی را تنظیم می‌کنیم
+            else:
+                stock.quantity += invoice_item_quantity  # موجودی را تنظیم می‌کنیم
+            stock.save()
+            form.save()
             messages.success(request, "مورد فاکتور با موفقیت ویرایش شد.", "success")
             return redirect("home:invoice_items")
         else:
