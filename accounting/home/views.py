@@ -286,7 +286,7 @@ class InvoiceDeleteView(View):
 class InvoiceItemsView(View):
     def get(self, request):
         invoice_items_all = InvoiceItem.objects.all()
-        paginator = Paginator(invoice_items_all, 5)  
+        paginator = Paginator(invoice_items_all, 20)  
         page_number = request.GET.get('page')
         invoice_items = paginator.get_page(page_number)
         return render(
@@ -468,7 +468,13 @@ class InvoiceItemInvoiceRegisterView(View):
     form_class = InvoiceItemRegisterForm
 
     def get(self, request, pk):
-        stocks = Stock.objects.all()
+        query = request.GET.get('q')  # گرفتن مقدار جستجو از query string
+
+        if query:
+            # فیلتر کردن محصولات بر اساس بخشی از نام
+            stocks = Stock.objects.filter(product__name__icontains=query)
+        else:
+            stocks = Stock.objects.all()
         invoice = get_object_or_404(Invoice, pk=pk)
         form = self.form_class(initial_invoice=invoice)
         return render(

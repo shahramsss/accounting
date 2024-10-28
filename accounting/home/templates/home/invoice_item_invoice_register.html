@@ -1,48 +1,60 @@
 {% extends 'base.html' %}
 {% load humanize %}
 {% block content %}
+  <div class="container mt-5">
+    <h2 class="mb-4">ثبت اقلام فاکتور</h2>
 
-<div class="container">
-    <h2>ثبت اقلام فاکتور </h2>
+    <!-- فرم ثبت اقلام -->
     <form method="post" action="">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">ثبت</button>
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-primary">ثبت</button>
     </form>
-<hr>
 
+    <hr />
+    <p class="h4 mt-4">جستجو محصولات و موجودی</p>
+
+    <!-- فرم جستجو -->
+    <form class="d-flex my-2" method="get">
+      <input class="form-control me-2" type="text" name="q" placeholder="جستجو کنید..." />
+      <button class="btn btn-primary" type="submit">جستجو</button>
+    </form>
     {% if stocks %}
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th scope="row">#</th>
-          <th scope="col">نام محصول</th>
-          <th scope="col">انبار</th>
-          <th scope="col">تعداد</th>
-          <th scope="col">قیمت</th>
-          <th scope="col">ویرایش</th>
-          <th scope="col">حذف</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for stock in stocks %}
-          <tr>
-            <td>{{ stock.id }}</td>
-            <td>{{ stock.product.name }}</td>
-            <td>{{ stock.warehouse.name }}</td>
-            <td>{{ stock.quantity }}</td>
-            <td>{{ stock.product.price|intcomma }}</td>
-            <td>
-              <a href="{% url 'home:stock_update' stock.id %}">ویرایش</a>
-            </td>
-            <td>
-              <a class="text-danger" href="{% url 'home:stock_delete' stock.id %}">حذف</a>
-            </td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  {% endif %}
-</div>
-{% endblock content %}
+      <hr />
 
+      <!-- جدول نمایش موجودی انبار -->
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">نام محصول</th>
+            <th scope="col">انبار</th>
+            <th scope="col">تعداد</th>
+            <th scope="col">قیمت</th>
+            <th scope="col">ویرایش</th>
+            <th scope="col">حذف</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for stock in stocks %}
+            <tr>
+              <td>{{ forloop.counter }}</td> <!-- شماره ردیف -->
+              <td>{{ stock.product.name }}</td>
+              <td>{{ stock.warehouse.name }}</td>
+              <td>{{ stock.quantity }}</td>
+              <td>{{ stock.product.price|intcomma }} تومان</td> <!-- قیمت با فرمت صحیح -->
+              <td>
+                <a href="{% url 'home:stock_update' stock.id %}" class="btn btn-sm btn-warning">ویرایش</a>
+              </td>
+              <td>
+                <a href="{% url 'home:stock_delete' stock.id %}" class="btn btn-sm btn-danger text-white">حذف</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="text-center mt-4">هیچ موجودی‌ای برای نمایش وجود ندارد.</p>
+    {% endif %}
+  </div>
+{% endblock %}
