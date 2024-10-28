@@ -4,6 +4,7 @@ from .models import Product, Warehouse, Stock, Invoice, InvoiceItem
 from .forms import *
 from django.contrib import messages
 from django.db.models import ProtectedError
+from django.db import transaction
 
 
 # home viws
@@ -300,17 +301,50 @@ class InvoiceItemRegisterView(View):
 
     def post(self, request):
         form = self.form_class(request.POST)
+
         if form.is_valid():
+            # دریافت داده‌های تمیز شده از فرم
+            warehouse = form.cleaned_data["warehouse"]
+            product = form.cleaned_data["product"]
+            quantity = form.cleaned_data["quantity"]
+            incoive = form.cleaned_data["invoice"]
+            try:
+                # بررسی موجودی انبار
+                stock = Stock.objects.get(warehouse=warehouse, product=product)
+                if incoive.invoice_type == "sale" and quantity > stock.quantity:
+                    messages.warning(
+                        request,
+                        f"موجودی کافی برای {product.name} در انبار {warehouse.name} وجود ندارد. "
+                        f"موجودی فعلی: {stock.quantity}",
+                        "warning",
+                    )
+                    return render(
+                        request, "home/invoice_item_register.html", {"form": form}
+                    )
+
+            except Stock.DoesNotExist:
+                messages.warning(
+                    request,
+                    f"محصول {product.name} در انبار {warehouse.name} موجود نیست.",
+                    "warning",
+                )
+                return render(
+                    request, "home/invoice_item_register.html", {"form": form}
+                )
+
+            # ذخیره آیتم و به‌روزرسانی موجودی انبار
+            if incoive.invoice_type == "sale":
+                stock.quantity -= quantity
+            else:
+                stock.quantity += quantity
+            stock.save()
             form.save()
             messages.success(request, "مورد با موفقیت ثبت شد.", "success")
             return redirect("home:invoice_items")
-        else:
-            messages.warning(
-                request,
-                "موردی ثبت نشد!",
-                "warning",
-            )
-            return redirect("home:invoice_item_register")
+
+        # در صورت نامعتبر بودن فرم
+        messages.warning(request, "موردی ثبت نشد!", "warning")
+        return render(request, "home/invoice_item_register.html", {"form": form})
 
 
 class InvoicItemeUpdateView(View):
@@ -326,20 +360,43 @@ class InvoicItemeUpdateView(View):
         stock = Stock.objects.get(
             product=invoice_item.product, warehouse=invoice_item.warehouse
         )
+        stock_quantity = stock.quantity
         form = self.form_class(request.POST, instance=invoice_item)
-        invoice_item_quantity = invoice_item.quantity
+        previous_quantity = invoice_item.quantity
+
         if form.is_valid():
+            new_quantity = form.cleaned_data["quantity"]
+            dif_quantity = previous_quantity - new_quantity
+
+            if dif_quantity == 0:
+                messages.success(request, "تغییری ایجاد نشد!", "success")
+                return redirect("home:invoice_items")
+
+            # تنظیم موجودی انبار بر اساس نوع فاکتور
             if invoice_item.invoice.invoice_type == "purchase":
-                stock.quantity -= invoice_item_quantity  # موجودی را تنظیم می‌کنیم
+                stock.quantity -= dif_quantity  # کاهش موجودی در خرید
             else:
-                stock.quantity += invoice_item_quantity  # موجودی را تنظیم می‌کنیم
+                stock.quantity += dif_quantity  # افزایش موجودی در فروش
+
+            # بررسی وضعیت موجودی بعد از تنظیم
+            if stock.quantity < 0:
+                messages.warning(
+                    request,
+                    f"موجودی کافی برای {invoice_item.product.name} در انبار {invoice_item.warehouse.name} وجود ندارد. "
+                    f"موجودی فعلی: {stock_quantity}.",
+                    "warning",
+                )
+                return redirect("home:invoice_item_update", invoice_item.id)
+
+            # ذخیره تغییرات و نمایش پیام موفقیت
             stock.save()
             form.save()
-            messages.success(request, "مورد فاکتور با موفقیت ویرایش شد.", "success")
+            messages.success(request, "مورد با موفقیت ویرایش شد.", "success")
             return redirect("home:invoice_items")
-        else:
-            messages.success(request, "مورد فاکتور ویرایش نشد!.", "warning")
-            return redirect("home:invoice_item_register")
+
+        # در صورت نامعتبر بودن فرم
+        messages.error(request, "خطایی در فرم رخ داده است.", "danger")
+        return redirect("home:invoice_items")
 
 
 class InvoiceItemDeleteView(View):

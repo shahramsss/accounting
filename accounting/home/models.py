@@ -2,39 +2,6 @@ from django.db import models
 from account.models import Person
 from django.utils import timezone
 from khayyam import JalaliDate
-
-
-# class Product(models.Model):
-#     name = models.CharField(max_length=256)
-#     description = models.CharField(max_length=512, null=True, blank=True)
-#     price = models.DecimalField(max_digits=12, decimal_places=0)
-
-#     def __str__(self):
-#         return self.name
-
-
-# class Repository(models.Model):
-#     title = models.CharField(max_length=128)
-#     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-#     quantity = models.SmallIntegerField(default=0)
-
-
-# class sell(models.Model):
-#     products = models.ManyToManyField(Product, related_name="product")
-#     person = models.ManyToManyField(Person)
-#     date = models.DateField(auto_now_add=True)
-
-#     @property
-#     def total_amount(self):
-#         total = sum(item.total_price for item in self.items.all())
-#         return total
-
-# class buy(models.Model):
-#     products = models.ManyToManyField(Product, related_name="product")
-#     person = models.ForeignKey(Person)
-
-
-# ---------------------------------------------------------------
 from django.db import models
 
 # مدل محصول
@@ -70,8 +37,8 @@ class Stock(models.Model):
 # مدل فاکتور (هم خرید و هم فروش)
 class Invoice(models.Model):
     INVOICE_TYPE_CHOICES = [
-        ('purchase', 'Purchase'),  # فاکتور خرید
-        ('sale', 'Sale')  # فاکتور فروش
+        ('purchase', 'خرید'),  # فاکتور خرید
+        ('sale', 'فروش')  # فاکتور فروش
     ]
 
     invoice_type = models.CharField(max_length=10, choices=INVOICE_TYPE_CHOICES)  # نوع فاکتور
@@ -102,18 +69,18 @@ class InvoiceItem(models.Model):
     def __str__(self):
         return f"{self.quantity} x {self.product.name} (Invoice #{self.invoice.id})"
 
-    # کاهش یا افزایش موجودی انبار بر اساس خرید یا فروش
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)  # ذخیره آیتم فاکتور
+    # # کاهش یا افزایش موجودی انبار بر اساس خرید یا فروش
+    # def save(self, *args, **kwargs):
+    #     super().save(*args, **kwargs)  # ذخیره آیتم فاکتور
 
-        # به‌روزرسانی موجودی انبار
-        stock, created = Stock.objects.get_or_create(product=self.product, warehouse=self.warehouse)
+    #     # به‌روزرسانی موجودی انبار
+    #     stock, created = Stock.objects.get_or_create(product=self.product, warehouse=self.warehouse)
         
-        if self.invoice.invoice_type == 'sale':
-            stock.quantity -= self.quantity  # کاهش موجودی در صورت فروش
-        elif self.invoice.invoice_type == 'purchase':
-            stock.quantity += self.quantity  # افزایش موجودی در صورت خرید
+    #     if self.invoice.invoice_type == 'sale':
+    #         stock.quantity -= self.quantity  # کاهش موجودی در صورت فروش
+    #     elif self.invoice.invoice_type == 'purchase':
+    #         stock.quantity += self.quantity  # افزایش موجودی در صورت خرید
 
-        stock.save()  # ذخیره به‌روزرسانی موجودی
+    #     stock.save()  # ذخیره به‌روزرسانی موجودی
 
 

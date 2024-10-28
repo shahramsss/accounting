@@ -1,5 +1,6 @@
 from django import forms
 from .models import Product, Warehouse, Stock, Invoice, InvoiceItem
+from django.core.exceptions import ValidationError
 
 
 class ProductRegisterForm(forms.ModelForm):
@@ -124,10 +125,12 @@ class InvoiceItemRegisterForm(forms.ModelForm):
             "invoice": forms.Select(attrs={"class": "form-control"}),
             "product": forms.Select(attrs={"class": "form-control"}),
             "warehouse": forms.Select(attrs={"class": "form-control"}),
-            "quantity": forms.NumberInput(attrs={"class": "form-control","placeholder": "تعداد"}),
+            "quantity": forms.NumberInput(
+                attrs={"class": "form-control", "placeholder": "تعداد"}
+            ),
             "unit_price": forms.NumberInput(
                 attrs={"class": "form-control", "placeholder": "قیمت واحد"}
-            ),  
+            ),
         }
 
         labels = {  # برچسب‌های سفارشی برای فیلدهای موجود در مدل
@@ -137,3 +140,5 @@ class InvoiceItemRegisterForm(forms.ModelForm):
             "quantity": "تعداد",
             "unit_price": "قیمت واحد",
         }
+
+      
