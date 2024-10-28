@@ -46,7 +46,7 @@
             <td>
               <a href="{% url 'home:invoice_item_update' invoice_item.id %}">ویرایش</a>
             </td>
-            
+
             <td>
               <a class="text-danger" href="{% url 'home:invoice_item_delete' invoice_item.id %}">حذف</a>
             </td>
@@ -54,5 +54,31 @@
         {% endfor %}
       </tbody>
     </table>
+    <div class="pagination">
+      <!-- لینک به صفحه قبلی -->
+      <nav aria-label="Page navigation example">
+        <ul class="pagination">
+          {% if invoice_items.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ invoice_items.previous_page_number }}">قبلی</a>
+            </li>
+          {% endif %}
+
+          <!-- نمایش شماره صفحات -->
+          <li class="page-item">
+            <a class="page-link"> <span>صفحه {{ invoice_items.number }} از {{ invoice_items.paginator.num_pages }}</span></a>
+          </li>
+         
+
+          <!-- لینک به صفحه بعدی -->
+          {% if invoice_items.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ invoice_items.next_page_number }}">بعدی</a>
+            </li>
+          {% endif %}
+          
+        </ul>
+      </nav>
+    </div>
   {% endif %}
 {% endblock %}

@@ -5,7 +5,7 @@ from .forms import *
 from django.contrib import messages
 from django.db.models import ProtectedError
 from django.db import transaction
-
+from django.core.paginator import Paginator
 
 # home viws
 class HomeView(View):
@@ -285,7 +285,10 @@ class InvoiceDeleteView(View):
 # InvoiceItem View
 class InvoiceItemsView(View):
     def get(self, request):
-        invoice_items = InvoiceItem.objects.all()
+        invoice_items_all = InvoiceItem.objects.all()
+        paginator = Paginator(invoice_items_all, 5)  
+        page_number = request.GET.get('page')
+        invoice_items = paginator.get_page(page_number)
         return render(
             request, "home/invoice_items.html", {"invoice_items": invoice_items}
         )
