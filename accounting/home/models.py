@@ -69,18 +69,5 @@ class InvoiceItem(models.Model):
     def __str__(self):
         return f"{self.quantity} x {self.product.name} (Invoice #{self.invoice.id})"
 
-    # # کاهش یا افزایش موجودی انبار بر اساس خرید یا فروش
-    # def save(self, *args, **kwargs):
-    #     super().save(*args, **kwargs)  # ذخیره آیتم فاکتور
-
-    #     # به‌روزرسانی موجودی انبار
-    #     stock, created = Stock.objects.get_or_create(product=self.product, warehouse=self.warehouse)
-        
-    #     if self.invoice.invoice_type == 'sale':
-    #         stock.quantity -= self.quantity  # کاهش موجودی در صورت فروش
-    #     elif self.invoice.invoice_type == 'purchase':
-    #         stock.quantity += self.quantity  # افزایش موجودی در صورت خرید
-
-    #     stock.save()  # ذخیره به‌روزرسانی موجودی
-
-
+   
+    

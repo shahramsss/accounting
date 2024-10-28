@@ -399,33 +399,6 @@ class InvoicItemeUpdateView(View):
         return redirect("home:invoice_items")
 
 
-# class InvoiceItemDeleteView(View):
-#     def get(self, request, pk):
-#         invoice_item = get_object_or_404(InvoiceItem, pk=pk)
-#         return render(
-#             request, "home/invoice_item_delete.html", {"invoice_item": invoice_item}
-#         )
-
-#     def post(self, request, pk):
-#         invoice_item = get_object_or_404(InvoiceItem, pk=pk)
-
-#         if "invoice_item_confirm_delete" in request.POST:
-#             stock = Stock.objects.get(
-#                 product=invoice_item.product, warehouse=invoice_item.warehouse
-#             )
-#             if invoice_item.invoice.invoice_type == "purchase":
-#                 stock.quantity -= invoice_item.quantity  # موجودی را تنظیم می‌کنیم
-#             else:
-#                 stock.quantity += invoice_item.quantity  # موجودی را تنظیم می‌کنیم
-#             stock.save()
-#             invoice_item.delete()
-#             messages.success(request, "مورد فاکتور با موفقیت حذف شد.", "success")
-#             return redirect("home:invoice_items")
-#         else:
-#             messages.warning(request, "مورد فاکتور حذف نشد!.", "warning")
-#             return redirect("home:invoice_items")
-
-
 class InvoiceItemDeleteView(View):
     def get(self, request, pk):
         invoice_item = get_object_or_404(InvoiceItem, pk=pk)
@@ -466,3 +439,35 @@ class InvoiceItemDeleteView(View):
         invoice_item.delete()
         messages.success(request, "مورد فاکتور با موفقیت حذف شد.", "success")
         return redirect("home:invoice_items")
+
+
+class InvoiceItemInvoiceView(View):
+    form_class = InvoiceItemFormSet
+    invoice_form = InvoiceRegisterForm
+    item_formset = InvoiceItemFormSet
+
+    def get(self, request):
+        return render(
+            request,
+            "home/incoive_item_invoice.html",
+            {
+                "invoice_form": self.invoice_form,
+                "item_formset": self.item_formset,
+            },
+        )
+
+
+class SearchView(View):
+    def get(self, request):
+        query = request.GET.get("query")
+        invoices = (
+            Invoice.objects.filter(person__name__icontains=query) if query else []
+        )
+        return render(request, "home/search.html", {"invoices": invoices})
+
+
+class InvoiceItemsPersonView(View):
+    def get(self, request, pk):
+        invoice = get_object_or_404(Invoice, pk=pk)
+        invoice_items = invoice.items.all()
+        return render(request, "home/invoice_items_person.html", {"invoice_items": invoice_items, "invoice": invoice})

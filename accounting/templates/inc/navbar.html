@@ -27,6 +27,9 @@
         <li class="nav-item">
           <a class="nav-link text-white" aria-current="page" href="{% url 'home:invoice_items' %}">اقلام فاکتورها</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" aria-current="page" href="{% url 'home:search' %}">جستجو</a>
+        </li>
       </ul>
       <div class="d-flex">
         {% if request.user.is_authenticated %}

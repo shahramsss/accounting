@@ -1,6 +1,7 @@
 from django import forms
 from .models import Product, Warehouse, Stock, Invoice, InvoiceItem
 from django.core.exceptions import ValidationError
+from django.forms import inlineformset_factory
 
 
 class ProductRegisterForm(forms.ModelForm):
@@ -141,4 +142,13 @@ class InvoiceItemRegisterForm(forms.ModelForm):
             "unit_price": "قیمت واحد",
         }
 
-      
+
+InvoiceItemFormSet = inlineformset_factory(
+    Invoice,
+    InvoiceItem,  # مدل اصلی و مدل وابسته
+    fields="__all__",
+    extra=1,  # تعداد فرم‌های اضافه (برای آیتم‌های جدید)
+)
+
+
+

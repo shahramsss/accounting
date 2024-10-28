@@ -12,9 +12,10 @@
         <tr>
           <th scope="row">#</th>
           <th scope="col">نوع فاکتور</th>
+          <th scope="col">شماره فاکتور</th>
+          <th scope="col">شخص</th>
           <th scope="col">تاریخ فاکتور</th>
           <th scope="col">نام انبار</th>
-          <th scope="col">شخص</th>
           <th scope="col">نام محصول</th>
           <th scope="col">تعداد</th>
           <th scope="col">قیمت واحد</th>
@@ -34,9 +35,10 @@
               <td>فروش</td>
             {% endif %}
 
+            <td>{{ invoice_item.invoice.id }}</td>
+            <td>{{ invoice_item.invoice.person.name }}</td>
             <td>{{ invoice_item.invoice.date|to_jalali }}</td>
             <td>{{ invoice_item.warehouse.name }}</td>
-            <td>{{ invoice_item.invoice.person.name }}</td>
             <td>{{ invoice_item.product.name }}</td>
             <td>{{ invoice_item.quantity }}</td>
             <td>{{ invoice_item.unit_price|intcomma }}</td>

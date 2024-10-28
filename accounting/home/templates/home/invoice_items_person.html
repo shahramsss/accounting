@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load custom_filters %}
+
+{% block content %}
+<h3 class="my-1">اقلام فاکتور </h3>
+
+
+<!-- invoice  -->
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="row">#</th>
+      <th scope="col">نوع فاکتور</th>
+      
+      <th scope="col">شخص</th>
+      <th scope="col">تاریخ فاکتور</th>
+    </tr>
+  </thead>
+  <tbody>
+   
+    <tr>
+      <td>{{ invoice.id }}</td>
+
+      {% if invoice.invoice_type == 'purchase' %}
+      <td>خرید</td>
+      {% else %}
+      <td>فروش</td>
+      {% endif %}
+
+      <td>{{ invoice.person.name }}</td>
+      <td>{{ invoice.date|to_jalali }}</td>
+    
+    </tr>
+    
+  </tbody>
+</table>
+
+<!-- invoice items  -->
+
+
+<a class="btn btn-primary my-2" href="{% url 'home:invoice_item_register' %}">ثبت اقلام فاکتور</a>
+{% if invoice_items %}
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="row">#</th>
+      <th scope="col">نام انبار</th>
+      <th scope="col">نام محصول</th>
+      <th scope="col">تعداد</th>
+      <th scope="col">قیمت واحد</th>
+      <th scope="col">قیمت کل</th>
+      <th scope="col">ویرایش</th>
+      <th scope="col">حذف</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for invoice_item in invoice_items %}
+    <tr>
+      <td>{{ invoice_item.id }}</td>
+      <td>{{ invoice_item.warehouse.name }}</td>
+      <td>{{ invoice_item.product.name }}</td>
+      <td>{{ invoice_item.quantity }}</td>
+      <td>{{ invoice_item.unit_price|intcomma }}</td>
+      <td>{{ invoice_item.total_price|intcomma }}</td>
+      <td>
+        <a href="{% url 'home:invoice_item_update' invoice_item.id %}">ویرایش</a>
+      </td>
+
+      <td>
+        <a class="text-danger" href="{% url 'home:invoice_item_delete' invoice_item.id %}">حذف</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+{% endblock %}
