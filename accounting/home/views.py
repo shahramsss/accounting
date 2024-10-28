@@ -399,6 +399,33 @@ class InvoicItemeUpdateView(View):
         return redirect("home:invoice_items")
 
 
+# class InvoiceItemDeleteView(View):
+#     def get(self, request, pk):
+#         invoice_item = get_object_or_404(InvoiceItem, pk=pk)
+#         return render(
+#             request, "home/invoice_item_delete.html", {"invoice_item": invoice_item}
+#         )
+
+#     def post(self, request, pk):
+#         invoice_item = get_object_or_404(InvoiceItem, pk=pk)
+
+#         if "invoice_item_confirm_delete" in request.POST:
+#             stock = Stock.objects.get(
+#                 product=invoice_item.product, warehouse=invoice_item.warehouse
+#             )
+#             if invoice_item.invoice.invoice_type == "purchase":
+#                 stock.quantity -= invoice_item.quantity  # موجودی را تنظیم می‌کنیم
+#             else:
+#                 stock.quantity += invoice_item.quantity  # موجودی را تنظیم می‌کنیم
+#             stock.save()
+#             invoice_item.delete()
+#             messages.success(request, "مورد فاکتور با موفقیت حذف شد.", "success")
+#             return redirect("home:invoice_items")
+#         else:
+#             messages.warning(request, "مورد فاکتور حذف نشد!.", "warning")
+#             return redirect("home:invoice_items")
+
+
 class InvoiceItemDeleteView(View):
     def get(self, request, pk):
         invoice_item = get_object_or_404(InvoiceItem, pk=pk)
@@ -409,18 +436,33 @@ class InvoiceItemDeleteView(View):
     def post(self, request, pk):
         invoice_item = get_object_or_404(InvoiceItem, pk=pk)
 
-        if "invoice_item_confirm_delete" in request.POST:
-            stock = Stock.objects.get(
-                product=invoice_item.product, warehouse=invoice_item.warehouse
-            )
-            if invoice_item.invoice.invoice_type == "purchase":
-                stock.quantity -= invoice_item.quantity  # موجودی را تنظیم می‌کنیم
-            else:
-                stock.quantity += invoice_item.quantity  # موجودی را تنظیم می‌کنیم
-            stock.save()
-            invoice_item.delete()
-            messages.success(request, "مورد فاکتور با موفقیت حذف شد.", "success")
+        if "invoice_item_confirm_delete" not in request.POST:
+            messages.warning(request, "مورد فاکتور حذف نشد!", "warning")
             return redirect("home:invoice_items")
+
+        # بازیابی موجودی مربوط به محصول و انبار
+        stock = Stock.objects.get(
+            product=invoice_item.product, warehouse=invoice_item.warehouse
+        )
+
+        # تنظیم موجودی بر اساس نوع فاکتور
+        if invoice_item.invoice.invoice_type == "purchase":
+            stock.quantity -= invoice_item.quantity  # کاهش موجودی برای خرید
         else:
-            messages.warning(request, "مورد فاکتور حذف نشد!.", "warning")
+            stock.quantity += invoice_item.quantity  # افزایش موجودی برای فروش
+
+        # بررسی اینکه موجودی منفی نشود
+        if stock.quantity < 0:
+            messages.warning(
+                request,
+                f"موجودی کافی برای حذف {invoice_item.product.name} در انبار {invoice_item.warehouse.name} وجود ندارد. "
+                f"موجودی فعلی: {stock.quantity + invoice_item.quantity}.",
+                "warning",
+            )
             return redirect("home:invoice_items")
+
+        # ذخیره تغییرات و حذف آیتم
+        stock.save()
+        invoice_item.delete()
+        messages.success(request, "مورد فاکتور با موفقیت حذف شد.", "success")
+        return redirect("home:invoice_items")
