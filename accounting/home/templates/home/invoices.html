@@ -4,7 +4,7 @@
 {% block content %}
   <h3 class="my-1">فاکتورها</h3>
 
-  <a class="btn btn-primary my-2" href="{% url 'home:invoice_item_register' %}">ثبت اقلام فاکتور</a>
+  <a class="btn btn-primary my-2" href="{% url 'home:invoice_register' %}">ثبت  فاکتور</a>
   {% if invoices %}
     <table class="table">
       <thead>
@@ -32,7 +32,7 @@
             <td>{{ invoice.person.name }}</td>
             <td>{{ invoice.date|to_jalali }}</td>
             <td>
-              <a class="text-info" href="{% url 'home:invoice_items_pesron' invoice.id %}">اقلام</a>
+              <a class="text-success" href="{% url 'home:invoice_items_pesron' invoice.id %}">اقلام</a>
             </td> 
             <td>
               <a href="{% url 'home:invoice_update' invoice.id %}">ویرایش</a>

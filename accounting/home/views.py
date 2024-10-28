@@ -221,7 +221,7 @@ class StocksDeleteView(View):
 # Invoice View
 class InvoicesView(View):
     def get(self, request):
-        invoices = Invoice.objects.all()
+        invoices = Invoice.objects.all().order_by("-date")
         return render(request, "home/invoices.html", {"invoices": invoices})
 
 
@@ -441,27 +441,11 @@ class InvoiceItemDeleteView(View):
         return redirect("home:invoice_items")
 
 
-class InvoiceItemInvoiceView(View):
-    form_class = InvoiceItemFormSet
-    invoice_form = InvoiceRegisterForm
-    item_formset = InvoiceItemFormSet
-
-    def get(self, request):
-        return render(
-            request,
-            "home/incoive_item_invoice.html",
-            {
-                "invoice_form": self.invoice_form,
-                "item_formset": self.item_formset,
-            },
-        )
-
-
 class SearchView(View):
     def get(self, request):
         query = request.GET.get("query")
         invoices = (
-            Invoice.objects.filter(person__name__icontains=query) if query else []
+            Invoice.objects.filter(person__name__icontains=query).order_by("-date") if query else []
         )
         return render(request, "home/search.html", {"invoices": invoices})
 
@@ -470,4 +454,69 @@ class InvoiceItemsPersonView(View):
     def get(self, request, pk):
         invoice = get_object_or_404(Invoice, pk=pk)
         invoice_items = invoice.items.all()
-        return render(request, "home/invoice_items_person.html", {"invoice_items": invoice_items, "invoice": invoice})
+        return render(
+            request,
+            "home/invoice_items_person.html",
+            {"invoice_items": invoice_items, "invoice": invoice},
+        )
+
+
+class InvoiceItemInvoiceRegisterView(View):
+    form_class = InvoiceItemRegisterForm
+
+    def get(self, request, pk):
+        stocks = Stock.objects.all()
+        invoice = get_object_or_404(Invoice, pk=pk)
+        form = self.form_class(initial_invoice=invoice)
+        return render(
+            request, "home/invoice_item_invoice_register.html", {"form": form ,"stocks":stocks}
+        )
+
+    def post(self, request, pk):
+        form = self.form_class(request.POST)
+        invoice = get_object_or_404(Invoice, pk=pk)
+        if form.is_valid():
+            # دریافت داده‌های تمیز شده از فرم
+            warehouse = form.cleaned_data["warehouse"]
+            product = form.cleaned_data["product"]
+            quantity = form.cleaned_data["quantity"]
+            incoive = form.cleaned_data["invoice"]
+            try:
+                # بررسی موجودی انبار
+                stock = Stock.objects.get(warehouse=warehouse, product=product)
+                if incoive.invoice_type == "sale" and quantity > stock.quantity:
+                    messages.warning(
+                        request,
+                        f"موجودی کافی برای {product.name} در انبار {warehouse.name} وجود ندارد. "
+                        f"موجودی فعلی: {stock.quantity}",
+                        "warning",
+                    )
+                    return render(
+                        request, "home/invoice_item_register.html", {"form": form}
+                    )
+
+            except Stock.DoesNotExist:
+                messages.warning(
+                    request,
+                    f"محصول {product.name} در انبار {warehouse.name} موجود نیست.",
+                    "warning",
+                )
+                return render(
+                    request, "home/invoice_item_register.html", {"form": form}
+                )
+
+            # ذخیره آیتم و به‌روزرسانی موجودی انبار
+            if incoive.invoice_type == "sale":
+                stock.quantity -= quantity
+            else:
+                stock.quantity += quantity
+            stock.save()
+            invoice_item = form.save(commit=False)
+            invoice_item.unit_price = stock.product.price
+            invoice_item.save()
+            messages.success(request, "مورد با موفقیت ثبت شد.", "success")
+            return redirect("home:invoice_items_pesron" , invoice.id)
+
+        # در صورت نامعتبر بودن فرم
+        messages.warning(request, "موردی ثبت نشد!", "warning")
+        return render(request, "home/invoice_item_register.html", {"form": form})

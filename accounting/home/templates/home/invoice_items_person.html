@@ -39,7 +39,7 @@
 <!-- invoice items  -->
 
 
-<a class="btn btn-primary my-2" href="{% url 'home:invoice_item_register' %}">ثبت اقلام فاکتور</a>
+<a class="btn btn-success my-2" href="{% url 'home:invoice_item_invoice_Register' invoice.id %}">ثبت اقلام</a>
 {% if invoice_items %}
 <table class="table">
   <thead>

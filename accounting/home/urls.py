@@ -49,9 +49,10 @@ urlpatterns = [
     path("invoiceitemupdate/<int:pk>/" , views.InvoicItemeUpdateView.as_view() , name='invoice_item_update'),
     path("invoiceitemdelete/<int:pk>/" , views.InvoiceItemDeleteView.as_view() , name='invoice_item_delete'),
     path("invoiceitemdeleteconfirm/<int:pk>/" , views.InvoiceItemDeleteView.as_view() , name='invoice_item_delete_confirm'),
-    # incoive_item_invoice
-
-    path("incoiveiteminvoice/" , views.InvoiceItemInvoiceView.as_view() , name='incoive_item_invoice'),
+    # search in Invoice by person name
     path("search/" , views.SearchView.as_view() , name='search'),
+    # invoice items peson 
     path("invoiceitemspesron/<int:pk>/" , views.InvoiceItemsPersonView.as_view() , name='invoice_items_pesron'),
+    # invoice item set before invoice
+    path("InvoiceItemInvoiceRegister/<int:pk>/" , views.InvoiceItemInvoiceRegisterView.as_view() , name='invoice_item_invoice_Register'),
 ]

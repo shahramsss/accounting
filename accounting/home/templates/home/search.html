@@ -2,13 +2,12 @@
 {% load custom_filters %}
 
 {% block content %}
-
-  <form class=" d-flex my-2" method="get">
+  <form class="d-flex my-2" method="get">
     <input class="form-control me-2" type="text" name="query" placeholder="جستجو کنید..." value="{{ query }}" />
     <button class="btn btn-primary" type="submit">جستجو</button>
   </form>
-  <hr>
-  <h3 class=" my-1">فاکتورها</h3>
+  <hr />
+  <h3 class="my-1">فاکتورها</h3>
 
   <a class="btn btn-primary my-2" href="{% url 'home:invoice_register' %}">ثبت فاکتور</a>
   {% if invoices %}
@@ -19,6 +18,7 @@
           <th scope="col">نوع فاکتور</th>
           <th scope="col">نام شخص</th>
           <th scope="col">تاریخ</th>
+          <th scope="col">اقلام</th>
           <th scope="col">ویرایش</th>
           <th scope="col">حذف</th>
         </tr>
@@ -36,6 +36,11 @@
 
             <td>{{ invoice.person.name }}</td>
             <td>{{ invoice.date|to_jalali }}</td>
+
+            <td>
+              <a class="text-success" href="{% url 'home:invoice_items_pesron' invoice.id %}">اقلام</a>
+            </td>
+
             <td>
               <a href="{% url 'home:invoice_update' invoice.id %}">ویرایش</a>
             </td>

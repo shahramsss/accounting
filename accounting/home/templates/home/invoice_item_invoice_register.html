@@ -1,12 +1,18 @@
 {% extends 'base.html' %}
 {% load humanize %}
-
 {% block content %}
-  <h3 class="my-1">موجودی</h3>
 
-  <a class="btn btn-primary my-2" href="{% url 'home:stock_register' %}">ثبت موجودی</a>
-  {% if stocks %}
-    <table class="table">
+<div class="container">
+    <h2>ثبت اقلام فاکتور </h2>
+    <form method="post" action="">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">ثبت</button>
+    </form>
+<hr>
+
+    {% if stocks %}
+    <table class="table table-striped">
       <thead>
         <tr>
           <th scope="row">#</th>
@@ -37,4 +43,6 @@
       </tbody>
     </table>
   {% endif %}
-{% endblock %}
+</div>
+{% endblock content %}
+

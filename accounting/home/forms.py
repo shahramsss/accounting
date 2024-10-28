@@ -1,7 +1,6 @@
 from django import forms
 from .models import Product, Warehouse, Stock, Invoice, InvoiceItem
-from django.core.exceptions import ValidationError
-from django.forms import inlineformset_factory
+
 
 
 class ProductRegisterForm(forms.ModelForm):
@@ -121,6 +120,7 @@ class InvoiceItemRegisterForm(forms.ModelForm):
     class Meta:
         model = InvoiceItem
         fields = "__all__"
+        exclude = ("unit_price" , )
 
         widgets = {
             "invoice": forms.Select(attrs={"class": "form-control"}),
@@ -142,13 +142,10 @@ class InvoiceItemRegisterForm(forms.ModelForm):
             "unit_price": "قیمت واحد",
         }
 
-
-InvoiceItemFormSet = inlineformset_factory(
-    Invoice,
-    InvoiceItem,  # مدل اصلی و مدل وابسته
-    fields="__all__",
-    extra=1,  # تعداد فرم‌های اضافه (برای آیتم‌های جدید)
-)
-
-
+    def __init__(self, *args, **kwargs):
+        # مقدار اولیه برای فیلد category
+        initial_invoice = kwargs.pop("initial_invoice", None)
+        super().__init__(*args, **kwargs)
+        if initial_invoice:
+            self.fields["invoice"].initial = initial_invoice
 
